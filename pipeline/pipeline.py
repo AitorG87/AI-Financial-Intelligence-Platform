@@ -197,11 +197,18 @@ def cargar_schema_validador(cfg: ConfigProyecto) -> ValidadorDocumentoGastoV2:
 def crear_motor_qwen(cfg: ConfigProyecto) -> MotorQwenTransformers:
     config_motor = ConfigMotorQwen(
         model_id=str(cfg.qwen.model_id),
+        adapter_id=str(cfg.qwen.adapter_id),
         base_model_path=str(cfg.qwen.base_model_path),
         strict_local_only=bool(cfg.qwen.strict_local_only),
         dtype=str(cfg.qwen.dtype),
+        device_map=str(cfg.qwen.device_map),
         load_in_4bit=bool(cfg.qwen.load_in_4bit),
         max_new_tokens=int(cfg.qwen.max_new_tokens),
+        attn_implementation=str(cfg.qwen.attn_implementation),
+        force_sdpa_math=bool(cfg.qwen.force_sdpa_math),
+        target_height=int(cfg.qwen.target_height),
+        max_pixels=int(cfg.qwen.max_pixels),
+        debug=bool(cfg.qwen.debug),
     )
     return MotorQwenTransformers(config_motor)
 

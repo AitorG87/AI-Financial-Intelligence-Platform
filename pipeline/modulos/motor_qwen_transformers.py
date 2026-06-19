@@ -28,6 +28,7 @@ except Exception as ex:
 @dataclass(frozen=True)
 class ConfigMotorQwen:
     model_id: str
+    adapter_id: Optional[str] = None
     base_model_path: Optional[str] = None
     strict_local_only: bool = True
     dtype: str = "float16"
@@ -57,6 +58,7 @@ class ConfigMotorQwen:
     def desde_entorno() -> "ConfigMotorQwen":
         return ConfigMotorQwen(
             model_id=leer_env_str("QWEN_MODEL_ID", "Qwen/Qwen3-VL-4B-Instruct"),
+            adapter_id=leer_env_str("QWEN_ADAPTER_ID", ""),
             dtype=leer_env_str("QWEN_DTYPE", "float16"),
             device_map=leer_env_str("QWEN_DEVICE_MAP", "cuda"),
             load_in_4bit=leer_env_bool("QWEN_LOAD_IN_4BIT", False),
@@ -76,6 +78,7 @@ class MotorQwenTransformers:
         model_id_config = str(self.config.model_id).strip()
         ruta_adapter = Path(model_id_config)
         self.adapter_path: Optional[str] = None
+        self.adapter_id: Optional[str] = str(self.config.adapter_id or "").strip() or None
         self.base_model_id: str = model_id_config
         strict_local = bool(self.config.strict_local_only)
 
@@ -149,7 +152,8 @@ class MotorQwenTransformers:
         self.dtype = dtype
 
         # 3) Processor + Modelo
-        processor_source = self.adapter_path or self.base_model_id
+        adapter_source = self.adapter_path or self.adapter_id
+        processor_source = adapter_source or self.base_model_id
         kwargs_local = {"local_files_only": True} if strict_local else {}
 
         try:
@@ -174,13 +178,19 @@ class MotorQwenTransformers:
 
         modelo_base = AutoModelForImageTextToText.from_pretrained(self.base_model_id, **argumentos_modelo)
 
-        if self.adapter_path:
+        adapter_source = self.adapter_path or self.adapter_id
+
+        if adapter_source:
             if PeftModel is None:
                 raise RuntimeError(
-                    "Se detectó un adapter LoRA local, pero falta dependencia 'peft'. "
+                    "Se indicó un adapter LoRA, pero falta dependencia 'peft'. "
                     "Instala: pip install peft"
                 )
-            self.modelo = PeftModel.from_pretrained(modelo_base, self.adapter_path)
+            self.modelo = PeftModel.from_pretrained(
+                modelo_base,
+                adapter_source,
+                local_files_only=strict_local,
+            )
         else:
             self.modelo = modelo_base
 
@@ -188,6 +198,7 @@ class MotorQwenTransformers:
             print(f"[MotorQwen] model_id={self.config.model_id}")
             print(f"[MotorQwen] base_model_id={self.base_model_id}")
             print(f"[MotorQwen] adapter_path={self.adapter_path}")
+            print(f"[MotorQwen] adapter_id={self.adapter_id}")
             print(f"[MotorQwen] device_map={self.device_map}")
             print(f"[MotorQwen] dtype={dtype_str}")
 
