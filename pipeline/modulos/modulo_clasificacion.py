@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+import os
+from huggingface_hub import hf_hub_download
 
 # Resolver ruta base antes de cualquier import del proyecto
 ruta_archivo = Path(__file__).resolve()
@@ -177,26 +179,45 @@ def cargar_modelo_clasificacion_desde_disco(
     version_modelo: str = VERSION_MODELO,
 ) -> ArtefactosModeloClasificacion:
     cfg = cargar_config(ruta_base=ruta_base_proyecto)
-    ruta_modelo = (cfg.rutas.modelos / "clasificacion" / version_modelo).resolve()
 
-    if not ruta_modelo.exists():
-        raise FileNotFoundError(f"No existe la ruta del modelo: {ruta_modelo}")
+    model_id = os.getenv("CLASIFICADOR_MODEL_ID", "").strip()
 
-    metadatos_path = ruta_modelo / "metadatos.json"
-    if not metadatos_path.exists():
-        raise FileNotFoundError(f"No existe metadatos.json en: {metadatos_path}")
+    if model_id:
+        ruta_modelo_repr = Path(model_id)
 
-    metadatos = json.loads(metadatos_path.read_text(encoding="utf-8"))
+        metadatos_path = hf_hub_download(
+            repo_id=model_id,
+            filename="metadatos.json",
+            repo_type="model",
+        )
 
-    tokenizador = AutoTokenizer.from_pretrained(str(ruta_modelo))
-    modelo = AutoModelForSequenceClassification.from_pretrained(str(ruta_modelo))
+        metadatos = json.loads(Path(metadatos_path).read_text(encoding="utf-8"))
+
+        tokenizador = AutoTokenizer.from_pretrained(model_id)
+        modelo = AutoModelForSequenceClassification.from_pretrained(model_id)
+
+    else:
+        ruta_modelo = (cfg.rutas.modelos / "clasificacion" / version_modelo).resolve()
+
+        if not ruta_modelo.exists():
+            raise FileNotFoundError(f"No existe la ruta del modelo: {ruta_modelo}")
+
+        metadatos_path = ruta_modelo / "metadatos.json"
+        if not metadatos_path.exists():
+            raise FileNotFoundError(f"No existe metadatos.json en: {metadatos_path}")
+
+        metadatos = json.loads(metadatos_path.read_text(encoding="utf-8"))
+
+        tokenizador = AutoTokenizer.from_pretrained(str(ruta_modelo))
+        modelo = AutoModelForSequenceClassification.from_pretrained(str(ruta_modelo))
+        ruta_modelo_repr = ruta_modelo
 
     dispositivo = "cuda" if torch.cuda.is_available() else "cpu"
     modelo.to(dispositivo)
     modelo.eval()
 
     return ArtefactosModeloClasificacion(
-        ruta_modelo=ruta_modelo,
+        ruta_modelo=ruta_modelo_repr,
         tokenizador=tokenizador,
         modelo=modelo,
         metadatos=metadatos,
