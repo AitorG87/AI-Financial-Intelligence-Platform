@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DocumentoGasto",
+  "description": "DocumentoGasto v2",
+  "type": "object",
+  "required": [ "empresa", "fecha", "items", "totales" ],
+  "properties": {
+    "empresa": {
+      "type": "string",
+      "description": "Nombre comercial del establecimiento tal y como aparece en el documento."
+    },
+    "fecha": {
+      "type": "string",
+      "description": "Fecha EXACTAMENTE como aparece en el documento, sin normalizar."
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [ "concepto", "importe_total" ],
+        "properties": {
+          "concepto": {
+            "type": "string",
+            "description": "Descripción literal del producto o servicio."
+          },
+          "unidades": {
+            "type": "string",
+            "description": "Cantidad/unidades tal cual aparece (ej. '2 peça/peces', 'x3', '1')."
+          },
+          "importe_total": {
+            "type": "string",
+            "description": "Importe TOTAL de la línea (no el precio unitario). Negativo si es descuento."
+          },
+          "descuento_porcentaje": {
+            "type": "string",
+            "description": "Descuento porcentual si aparece en la línea."
+          },
+          "descuento_importe": {
+            "type": "string",
+            "description": "Descuento en importe absoluto si aparece en la línea."
+          },
+          "codigo_impuesto": {
+            "type": "string",
+            "description": "Código o letra de impuesto asociada a la línea (ej. 'A', 'B', 'C')."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "totales": {
+      "type": "object",
+      "required": [ "total" ],
+      "properties": {
+        "descuento_total": {
+          "type": "string",
+          "description": "Descuento total aplicado al documento si aparece."
+        },
+        "total": {
+          "type": "string",
+          "description": "Total final del documento."
+        }
+      },
+      "additionalProperties": false
+    },
+    "impuestos": {
+      "type": "object",
+      "description": "Bloque de impuestos si aparece en el documento.",
+      "properties": {
+        "iva_incluido_en_precios": {
+          "type": "boolean",
+          "description": "Indica si el IVA está incluido en los precios mostrados."
+        },
+        "mapa_codigo_impuesto": {
+          "type": "object",
+          "description": "Mapa entre códigos/letras de impuesto y su significado.",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "example": {
+            "C": "IVA 21%",
+            "A": "IVA 10%"
+          }
+        },
+        "resumen_impuestos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [ "tipo_impuesto", "base_imponible", "importe" ],
+            "properties": {
+              "tipo_impuesto": {
+                "type": "string",
+                "description": "Tipo de impuesto (ej. 'IVA 21 %')."
+              },
+              "base_imponible": {
+                "type": "string",
+                "description": "Base imponible asociada a ese impuesto."
+              },
+              "importe": {
+                "type": "string",
+                "description": "Importe del impuesto."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

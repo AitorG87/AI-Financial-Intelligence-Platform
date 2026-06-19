@@ -1,0 +1,36 @@
+# Environment
+.env
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.spyproject/
+
+# Runtime outputs
+outputs/
+logs/
+runs/
+
+# Models
+modelos/
+models/
+checkpoints/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+
+# Data / private files
+datos/imagenes/
+datos/jpg_normalizados/
+*.xlsx
+
+# MySQL Workbench backups
+*.mwb.bak

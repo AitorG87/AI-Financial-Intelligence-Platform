@@ -1,0 +1,15 @@
+streamlit==1.53.1
+mysql-connector-python==9.3.0
+pandas==2.3.3
+tqdm==4.67.1
+jsonschema==4.26.0
+pdf2image==1.17.0
+pillow==12.1.0
+numpy==2.2.5
+torch==2.9.1+cu128
+transformers==5.1.0
+peft==0.18.0
+qwen-vl-utils==0.0.14
+pmdarima==0.0.0
+matplotlib==3.10.8
+openpyxl==3.1.5
