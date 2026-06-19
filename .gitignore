@@ -12,10 +12,16 @@ __pycache__/
 .vscode/
 .spyproject/
 
-# Runtime outputs
+# Runtime input/output folders
+inputs/
 outputs/
 logs/
 runs/
+tmp/
+cache/
+
+# Legacy/local runtime folders
+produccion/
 
 # Models
 modelos/
@@ -31,6 +37,21 @@ checkpoints/
 datos/imagenes/
 datos/jpg_normalizados/
 *.xlsx
+*.xls
+*.csv
+*.jsonl
+*.pdf
+*.jpg
+*.jpeg
+*.png
+*.webp
+
+# Keep project schema JSON files
+!datos/*.json
 
 # MySQL Workbench backups
 *.mwb.bak
+
+# OS files
+.DS_Store
+Thumbs.db
