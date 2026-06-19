@@ -49,6 +49,60 @@ datos/jpg_normalizados/
 # Keep project schema JSON files
 !datos/*.json
 
+# Keep documentation images
+!docs/
+!docs/images/
+!docs/images/*.png
+!docs/images/*.jpg
+!docs/images/*.jpeg
+!docs/images/*.webp
+Después añade las imágenes forzando si hace falta
+
+Primero prueba:
+
+git status
+
+Luego:
+
+git add .gitignore
+git add docs/images
+
+Si aun así no las añade, usa:
+
+git add -f docs/images
+
+Después:
+
+git status
+
+Deberías ver algo como:
+
+modified: .gitignore
+new file: docs/images/classifier_confusion_matrix.png
+new file: docs/images/dashboard_gasto_ingreso.png
+new file: docs/images/dashboard_kpi.png
+...
+
+Y entonces:
+
+git commit -m "Add README documentation images"
+git push
+Comprobación final
+
+Cuando hagas push, en GitHub debería aparecer:
+
+docs/
+└── images/
+    ├── classifier_confusion_matrix.png
+    ├── dashboard_gasto_ingreso.png
+    ├── dashboard_kpi.png
+    ├── dashboard_portada.png
+    ├── dashboard_predicciones.png
+    ├── forecast_summary_table.png
+    ├── json_schema.png
+    ├── metricas_clasificacion.png
+    └── qwen_evaluation_table.png
+
 # MySQL Workbench backups
 *.mwb.bak
 
