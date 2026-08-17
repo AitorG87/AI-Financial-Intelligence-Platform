@@ -1,6 +1,6 @@
 # AI Financial Intelligence Platform
 
-End-to-end AI pipeline for extracting, validating, classifying, storing and forecasting personal financial expenses from receipts and invoices.
+End-to-end Document AI platform for extracting, validating, classifying and operationalizing structured financial information from receipts and invoices.
 
 This project was developed as the final Master's thesis for the **Master in Data Science, Big Data & Artificial Intelligence** at Universidad Complutense de Madrid / NTIC Master.
 
