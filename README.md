@@ -594,7 +594,7 @@ It integrates:
 
 **Aitor Guijarro Castro**
 
-Mechanical / automotive R&D engineer transitioning into AI engineering and data systems.
+Industrial Engineer with an automotive R&D background, focused on AI Engineering and Data & AI Systems.
 
 GitHub:
 
@@ -606,4 +606,10 @@ Hugging Face:
 
 ```text
 https://huggingface.co/Showker87
+```
+
+LinkedIn:
+
+```text
+https://www.linkedin.com/in/aitorguijarro/
 ```
